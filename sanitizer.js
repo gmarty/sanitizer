@@ -48,8 +48,8 @@
 
       for (var i = 0; i < strings.length; i++) {
         result += strings[i];
-        var value = arguments[i + 1] || '';
-        if (i < values.length) {
+        if (i + 1 < arguments.length) {
+          var value = arguments[i + 1] || '';
           result += String(value).replace(Sanitizer._entity,
             Sanitizer.getEntity);
         }
