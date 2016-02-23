@@ -43,8 +43,13 @@
     /**
      * Escapes HTML for all values in a tagged template string.
      */
-    escapeHTML: function (strings, ...values) {
+    escapeHTML: function (strings) {
       var result = '';
+      var _len = arguments.length;
+      var values = new Array(_len > 1 ? _len - 1 : 0);
+      for (var _key = 1; _key < _len; _key++) {
+        values[_key - 1] = arguments[_key];
+      }
 
       for (var i = 0; i < strings.length; i++) {
         result += strings[i];
@@ -59,22 +64,35 @@
     /**
      * Escapes HTML and returns a wrapped object to be used during DOM insertion
      */
-    createSafeHTML: function (strings, ...values) {
-      var escaped = Sanitizer.escapeHTML(strings, ...values);
+    createSafeHTML: function (strings) {
+      var _len = arguments.length;
+      var values = new Array(_len > 1 ? _len - 1 : 0);
+      for (var _key = 1; _key < _len; _key++) {
+        values[_key - 1] = arguments[_key];
+      }
+
+      var escaped = Sanitizer.escapeHTML.apply(Sanitizer,
+        [strings].concat(values));
       return {
         __html: escaped,
-        toString: function () {
+        toString: function() {
           return '[object WrappedHTMLObject]';
         },
-        info: 'This is a wrapped HTML object. See https://developer.mozilla.or'+
-          'g/en-US/Firefox_OS/Security/Security_Automation for more.'
+        info: 'This is a wrapped HTML object. See https://developer.mozilla.o' +
+          'rg/en-US/Firefox_OS/Security/Security_Automation for more.'
       };
     },
     /**
      * Unwrap safe HTML created by createSafeHTML or a custom replacement that
      * underwent security review.
      */
-    unwrapSafeHTML: function (...htmlObjects) {
+    unwrapSafeHTML: function () {
+      var _len = arguments.length;
+      var htmlObjects = new Array(_len);
+      for (var _key = 0; _key < _len; _key++) {
+        htmlObjects[_key] = arguments[_key];
+      }
+
       var markupList = htmlObjects.map(function(obj) {
         return obj.__html;
       });
